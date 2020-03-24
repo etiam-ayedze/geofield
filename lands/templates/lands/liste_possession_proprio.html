@@ -1,0 +1,83 @@
+{% extends 'dashboard1.html' %}
+
+{% block content %}
+    <div class="card border-secondary mb-3">
+        <div class="card-header" style="text-align: center">Détails sur la parcelle</div>
+        <div class="card-body">
+            <div>
+                <a href="{% url 'voir_proprio' %}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Précédent</a>
+            </div>
+
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Informations sur le propriétaire
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                            <div>
+                                <ul class="list-group list-group-flush">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <li class="list-group-item"><b>Nom:</b> {{ proprietaire.nom }}</li>
+                                            <li class="list-group-item"><b>Prénom:</b> {{ proprietaire.prenom }}</li>
+                                            <li class="list-group-item"><b>Sexe:</b> {{ proprietaire.sexe }}</li>
+                                            <li class="list-group-item"><b>Téléphone:</b> {{ proprietaire.telephone }}</li>
+                                            <li class="list-group-item"><b>Adresse:</b> {{ proprietaire.adresse }}</li>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <li class="list-group-item"><b>E-mail:</b> {{ proprietaire.email }}</li>
+                                            <li class="list-group-item"><b>Fonction:</b> {{ proprietaire.fonction }}</li>
+                                            <li class="list-group-item"><b>Date de naissance:</b> {{ proprietaire.date_naiss }}</li>
+                                            <li class="list-group-item"><b>Numéro de pièce d'identité:</b> {{ proprietaire.num_pieceid }}</li>
+                                        </div>
+                                    </div>
+
+                                    <div>
+
+                                    </div>
+
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Liste des propriétés du propriétaire
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <div class="col-md-12">
+                                    {% for parc in historique %}
+                                        <a href="{% url 'landdetail' parc.parcelle.id %}">
+                                        <li class="list-group-item"><b>Numéro de lot</b>{{ parc.parcelle.numLot }} |<b>Numéro de titre foncier</b>{{ parc.parcelle.numTitreFoncier }}</li>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+    </div>
+{% endblock %}

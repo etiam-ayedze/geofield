@@ -1,0 +1,28 @@
+
+{% extends 'dashboard1.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div id="mapid" style="width: auto; height: 480px; "></div> <!--height: 100vh, z-index: 99 -->
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+
+        function initialize() {
+            var map = L.map('mapid').setView([6.191188279065508, 1.204699017211965], 15);
+
+            var osm=new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'});
+
+            osm.addTo(map);
+
+        }
+        initialize()
+
+    </script>
+
+
+{% endblock %}
+

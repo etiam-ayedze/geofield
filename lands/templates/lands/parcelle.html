@@ -1,0 +1,107 @@
+{% extends 'dashboard1.html' %}
+
+{% block modal_title %}
+    Modifier propriétaire
+{% endblock %}
+
+{% block modal_content %}
+    <form action="{% url 'type_parcelle' %}" method="post" autocomplete="off" id="idtypeparc">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">Type de parcelle</label>
+            <input type="text" class="form-control" name="libTypeParcelle" placeholder="Type de parcelle" id="libTypeParcelle" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Valider</button>
+    </form>
+{% endblock %}
+
+{% block content %}
+
+    <div class="card border-secondary mb-3">
+        <div class="card-header" style="text-align: center">Parcelles</div>
+        <div class="card-body">
+
+            <div class="row">
+                <!-- Button to Open the Modal -->
+                <div class="col-md-1 ml-auto">
+                    <a href="{% url 'landsinfos' %}">
+                        <button type="button" class="btn btn-outline-success">Nouveau</button>
+                    </a>
+                </div>
+
+            </div>
+
+            <div>
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Numéro de lot</th>
+                        <th>Numéro de titre foncier</th>
+                        <th>Quartier</th>
+                        <th>Type de parcelle</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for parc in parcelle %}
+                        <tr>
+                            <td>{{ parc.numLot }}</td>
+                            <td>{{ parc.numTitreFoncier }}</td>
+                            <td>{{ parc.quartier.libQuartier }}</td>
+                            <td>{{ parc.typeParcelle.libTypeParcelle }}</td>
+                            <td>
+                                <a href="{% url 'landdetail' parc.id %}">
+                                    <button type="button" class="btn btn-info">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" onclick="modifierproprio({{ pers.id }})">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                </button>
+                                {#                                <a href="{% url 'delete_parcelle' pers.id %}" onclick=" return delete_parcelle()"></a>#}
+                                <button type="button" class="btn btn-danger">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {#    <script>#}
+    {#        function modifierproprio(id) {#}
+    {#            {% for prop in proprio %}#}
+    {#                var posit = '{{ prop.id }}'#}
+    {#                if (posit == id){#}
+    {#                    document.getElementById('nom').value = '{{ prop.nom }}'#}
+    {#                    document.getElementById('prenom').value = '{{ prop.prenom }}'#}
+    {#                    document.getElementById('sexem').value = '{{ prop.sexe }}'#}
+    {#                    document.getElementById('telephone').value = '{{ prop.telephone }}'#}
+    {#                    document.getElementById('adresse').value = '{{ prop.adresse }}'#}
+    {#                    document.getElementById('email').value = '{{ prop.email }}'#}
+    {#                    document.getElementById('fonction').value = '{{ prop.fonction }}'#}
+    {#                    document.getElementById('date_naiss').value = '{{ prop.date_naiss }}'#}
+    {#                    document.getElementById('num_pieceid').value = '{{ prop.num_pieceid }}'#}
+    {##}
+    {#                    actionForm = document.getElementById('idproprio')#}
+    {##}
+    {#                    actionForm.action += 'update/'+id#}
+    {##}
+    {#                    console.log('{{ update }}')#}
+    {##}
+    {#                    console.log()#}
+    {#                }#}
+    {#            {% endfor %}#}
+    {##}
+    {#        }#}
+    {#    </script>#}
+{% endblock %}

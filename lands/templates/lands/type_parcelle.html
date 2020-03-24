@@ -1,0 +1,132 @@
+{% extends 'dashboard1.html' %}
+
+{% block modal_title %}
+    Enregistrer un type de parcelle
+{% endblock %}
+
+
+{% block modal_content %}
+    <form action="{% if update == True %}{% url 'modify_typeparcelle' t_parcelle.id %}{% else %}{% url 'type_parcelle' %}{% endif %}" method="post" autocomplete="off" id="idtypeparc">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">Type de parcelle</label>
+            <input type="text" class="form-control" name="libTypeParcelle" placeholder="Type de parcelle" id="libTypeParcelle" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Valider</button>
+    </form>
+{% endblock %}
+
+
+{% block content %}
+    <div class="card border-secondary mb-3">
+        <div class="card-header" style="text-align: center">Type de parcelle</div>
+        <div class="card-body">
+            <!-- Bouton call modal -->
+            <div class="row">
+                <div class="col-md-1 ml-auto">
+                    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal" onclick="rafraichirtypeparc()">Nouveau</button>
+
+                </div>
+            </div>
+            <!-- /Bouton call modal-->
+
+            <!--datatable-->
+            <div class="container-fluid">
+                <div style=" width: auto; height: 100vh; z-index: 99"><!--margin-top:70.5px;-->
+                    {% if message %}
+                        <ul class="message">
+                            {% for message in messages %}
+                                <li>
+                                    <div class="alert alert-success">{{ message }}</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Type de parcelle</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+                        {% for tparc in tparcelle %}
+                            <tr>
+                                <td>{{ tparc.libTypeParcelle }}</td>
+                                <td>
+                                    {#                            <button type="button" class="btn btn-info">#}
+                                    {#                                <i class="fa fa-eye" aria-hidden="true"></i>#}
+                                    {#                            </button>#}
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" onclick="modifiertypeparcelle({{ tparc.id }})">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                    <a href="{% url 'delete_typeparcelle' tparc.id %}" onclick="return delete_typeparcelle()">
+                                        <button type="button" class="btn btn-danger">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- /datatable-->
+
+        </div>
+    </div>
+
+
+    <div class="container">
+        <!-- Button to Open the Modal -->
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        function modifiertypeparcelle(id) {
+            {% for t_parc in tparcelle %}
+                var posit = '{{ t_parc.id }}'
+                if (posit == id){
+                    document.getElementById('libTypeParcelle').value = '{{ t_parc.libTypeParcelle }}'
+
+                    actionForm = document.getElementById('idtypeparc')
+
+                    actionForm.action += 'update/'+id
+
+                    console.log('{{ update }}')
+
+                    console.log()
+                }
+            {% endfor %}
+        }
+
+        function rafraichirtypeparc() {
+            document.getElementById('libTypeParcelle').value='';
+
+            actionForm = document.getElementById('idtypeparc');
+
+            actionForm.action = '/lands/typeparcelle/'
+        }
+    </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

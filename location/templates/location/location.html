@@ -1,0 +1,413 @@
+{% extends 'dashboard1.html' %}
+
+{% block modal_title %}
+    Enregistrer nouveau
+{% endblock %}
+
+
+{% block modal_content %}
+    <form action="{% url 'save_region' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">Région</label>
+            <input type="text" class="form-control" name="libRegion" placeholder="Région administrative" id="inputDefault" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Valider</button>
+    </form>
+{% endblock %}
+<!-- /Modal-->
+
+
+
+{% block content %}
+
+
+    <div class="card border-light mb-3" >
+        <div class="card-header" style="text-align: center">SUBDIVISIONS ADMINISTRATIVES</div>
+        <div class="card-body" style="width: auto">
+            <div class="card border-light mb-2">
+                <div class="card-body">
+                    <div class="col-form-label-sm">
+                        <div class="form-group container-fluid">
+                        <label for="exampleSelect1">Région</label>
+                            <div class="row">
+                                <div class="col-md-9">
+
+                                    <select class="form-control" id="regionID" onchange="load_prefecture()">
+                                        <option value="" selected disabled>Selectionner une région</option>
+                                        {% for reg in region %}
+                                            <option>{{ reg }}</option>
+                                        {% endfor %}
+                                    </select><br/>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-info">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <label for="exampleSelect1">Préfecture</label>
+                                    <select class="form-control" id="prefectureID" onchange="load_commune()">
+                                        <option value="" selected disabled>Selectionner une préfecture</option>
+
+                                    </select><br/>
+                                </div>
+
+                                <div class="col-md-3">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <label for="exampleSelect1">Commune</label>
+                                    <select class="form-control" id="communeID" onchange="load_canton()">
+                                        <option value="" selected disabled>Selectionner une commune</option>
+
+                                    </select><br/>
+                                </div>
+
+                                <div class="col-md-3">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <label for="exampleSelect1">Canton</label>
+                                    <select class="form-control" id="cantonID" onchange="load_village()">
+                                        <option value="" selected disabled>Selectionner un canton</option>
+
+                                    </select><br/>
+                                </div>
+
+                                <div class="col-md-3">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <label for="exampleSelect1">Village</label>
+                                    <select class="form-control" id="villageID" onchange="load_quartier()">
+                                        <option value="" selected disabled>Selectionner un village</option>
+
+                                    </select><br/>
+                                </div>
+
+                                <div class="col-md-3">
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <label for="exampleSelect1">Quartier</label>
+                                    <select class="form-control" id="quartierID">
+                                        <option value="" selected disabled>Selectionner un quartier</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select><br/>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+        $(function () {
+            $("#location_select").change(function () {
+                var selectionne = $("#location_select option:selected ").text();
+                $("select_value").val(selectionne);
+            })
+        })
+    </script>
+
+{% endblock %}
+
+
+
+
+{% block script %}
+    <script>
+        function load_prefecture() {
+            region=document.getElementById("regionID");
+            prefecture=document.getElementById("prefectureID");
+            commune = document.getElementById("communeID");
+            canton = document.getElementById("cantonID");
+            village = document.getElementById("villageID");
+            quartier = document.getElementById("quartierID");
+
+            {#fonction pour vider les éléments du sélect#}
+            function vide (division)
+            {
+                var j;
+                for(j=division.options.length-1;j>=1;j--)
+                {
+                    division.options[j]=null
+                }
+            }
+
+            {#Ici on efface les éléments dans le select#}
+            vide(prefecture)
+            vide(commune)
+            vide(canton)
+            vide(village)
+            vide(quartier)
+            {#Ensuite on recupère toutes les préfectures et on compare sa région à la région sélectionnée#}
+            {#Lorsque la préfecture correspond à la région selectionnée on le met dans un tablea prefTab#}
+            var prefTab=[]
+            {% for pref in prefecture %}
+                posit= '{{ pref.region }}'
+                if(posit == region.value)
+                {
+                    prefTab.push('{{ pref }}')
+                }
+            {% endfor %}
+
+            {#Ensuite on crée les options du select en fonction du tableau#}
+            for(var i=0;i<prefTab.length;i++)
+            {
+                option = document.createElement("option")
+                option.text = prefTab[i]
+                prefecture.add(option)
+            }
+
+            console.log(prefTab);
+        }
+    </script>
+
+
+    <script>
+        function load_commune() {
+            prefecture = document.getElementById("prefectureID");
+            commune = document.getElementById("communeID");
+            canton = document.getElementById("cantonID");
+            village = document.getElementById("villageID");
+            quartier = document.getElementById("quartierID");
+
+            function vide (division)
+            {
+                var j;
+                for(j=division.options.length-1;j>=1;j--)
+                {
+                    division.options[j]=null
+                }
+            }
+            {#Ici on efface les éléments dans le select#}
+            vide(commune)
+            vide(canton)
+            vide(village)
+            vide(quartier)
+            {#Ensuite on recupère toutes les préfectures et on compare sa région à la région sélectionnée#}
+            {#Lorsque la préfecture correspond à la région selectionnée on le met dans un tablea comfTab#}
+            var comTab=[]
+            {% for com in commune %}
+                posit= '{{ com.prefecture }}'
+                if(posit == prefecture.value)
+                {
+                    comTab.push('{{ com }}')
+                }
+            {% endfor %}
+
+            {#Ensuite on crée les options du select en fonction du tableau#}
+            for(var i=0;i<comTab.length;i++)
+            {
+                option = document.createElement("option")
+                option.text = comTab[i]
+                commune.add(option)
+            }
+
+            console.log(comTab);
+        }
+
+
+    </script>
+
+    <script>
+        function load_canton() {
+            commune = document.getElementById("communeID");
+            canton = document.getElementById("cantonID");
+            village = document.getElementById("villageID");
+            quartier = document.getElementById("quartierID");
+
+            function vide (division)
+            {
+                var j;
+                for(j=division.options.length-1;j>=1;j--)
+                {
+                    division.options[j]=null
+                }
+            }
+            {#Ici on efface les éléments dans le select#}
+            vide(canton)
+            vide(village)
+            vide(quartier)
+            {#Ensuite on recupère toutes les préfectures et on compare sa région à la région sélectionnée#}
+            {#Lorsque la préfecture correspond à la région selectionnée on le met dans un tablea comfTab#}
+            var cantonTab=[]
+            {% for can in canton %}
+                posit= '{{ can.commune}}'
+                {#alert(commune.value)#}
+                if(posit == commune.value)
+                {
+                    cantonTab.push('{{ can }}')
+                }
+            {% endfor %}
+
+            {#Ensuite on crée les options du select en fonction du tableau#}
+            for(var i=0;i<cantonTab.length;i++)
+            {
+                option = document.createElement("option")
+                option.text = cantonTab[i]
+                canton.add(option)
+            }
+
+            console.log(cantonTab);
+        }
+
+
+    </script>
+
+    <script>
+        function load_village() {
+            canton = document.getElementById("cantonID");
+            village = document.getElementById("villageID");
+            quartier = document.getElementById("quartierID");
+
+            function vide (division)
+            {
+                var j;
+                for(j=division.options.length-1;j>=1;j--)
+                {
+                    division.options[j]=null
+                }
+            }
+            {#Ici on efface les éléments dans le select#}
+            vide(village)
+            vide(quartier)
+            {#Ensuite on recupère toutes les préfectures et on compare sa région à la région sélectionnée#}
+            {#Lorsque la préfecture correspond à la région selectionnée on le met dans un tablea comfTab#}
+            var villageTab=[]
+            {% for vil in village %}
+                posit= '{{ vil.canton}}'
+                {#alert(commune.value)#}
+                if(posit == canton.value)
+                {
+                    villageTab.push('{{ vil }}')
+                }
+            {% endfor %}
+
+            {#Ensuite on crée les options du select en fonction du tableau#}
+            for(var i=0;i<villageTab.length;i++)
+            {
+                option = document.createElement("option")
+                option.text = villageTab[i]
+                village.add(option)
+            }
+
+            console.log(villageTab);
+        }
+    </script>
+
+    <script>
+        function load_quartier() {
+            village = document.getElementById("villageID");
+            quartier = document.getElementById("quartierID");
+
+            function vide (division)
+            {
+                var j;
+                for(j=division.options.length-1;j>=1;j--)
+                {
+                    division.options[j]=null
+                }
+            }
+            {#Ici on efface les éléments dans le select#}
+            vide(quartier)
+            {#Ensuite on recupère toutes les préfectures et on compare sa région à la région sélectionnée#}
+            {#Lorsque la préfecture correspond à la région selectionnée on le met dans un tablea comfTab#}
+            var quartierTab=[]
+            {% for qrtier in quartier %}
+                posit= '{{ qrtier.village}}'
+                {#alert(commune.value)#}
+                if(posit == village.value)
+                {
+                    quartierTab.push('{{ qrtier }}')
+                }
+            {% endfor %}
+
+            {#Ensuite on crée les options du select en fonction du tableau#}
+            for(var i=0;i<quartierTab.length;i++)
+            {
+                option = document.createElement("option")
+                option.text = quartierTab[i]
+                quartier.add(option)
+            }
+
+            console.log(quartierTab);
+        }
+    </script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,238 @@
+{% extends 'dashboard1.html' %}
+
+{% block modal_title %}
+    Infos sur le propriétaire
+{% endblock %}
+
+{% block modal_content %}
+    <form autocomplete="off" id="idproprio">
+        {% csrf_token %}
+        <div id="section_imprime">
+            <div class="form-group" >
+
+                <div class="row">
+                    <div class="col-sm-5 col-md-6">
+                        <div>
+                            <label class="col-form-label" for="inputDefault">Nom</label>
+                            <input type="text" class="form-control" name="nom" placeholder="Nom" id="nom" required>
+                        </div>
+
+                        <div>
+                            <label class="col-form-label" for="inputDefault">Prénoms</label>
+                            <input type="text" class="form-control" name="prenom" placeholder="Prénoms" id="prenom" required>
+                        </div>
+
+                        <br/>
+                        <div >
+                            <legend><H6>Sexe</H6></legend>
+                            <div class="form-check col-md-6">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="sexe" id="sexem" value="M" checked>
+                                    Masculin
+                                </label>
+                            </div>
+
+                            <div class="form-check col-md-6">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="sexe" id="sexef" value="F" checked>
+                                    Féminin
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="col-form-label" for="example-tel-input">Telephone</label>
+                            <input type="text" class="form-control" name="telephone" placeholder="Telephone" id="telephone" required>
+                        </div>
+
+                        <div>
+                            <label class="col-form-label" for="example-tel-input">Adresse</label>
+                            <input type="text" class="form-control" name="adresse" placeholder="Adresse" id="adresse" required>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+
+
+                        <div>
+                            <label class="col-form-label" for="exampleInputEmail1">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="email@example.com">
+                        </div>
+
+                        <div>
+                            <label class="col-form-label" for="inputDefault">Fonction</label>
+                            <input type="text" class="form-control" name="fonction" placeholder="Fonction" id="fonction" required>
+                        </div>
+
+                        <div>
+                            <label for="example-date-input" class="col-form-label">Date de naissance</label>
+                            <input class="form-control" type="date" value="JJ/MM/AAAA" name="date_naiss" id="date_naiss">
+                        </div>
+
+                        <div>
+                            <label class="col-form-label" for="inputDefault">Numéro ID</label>
+                            <input type="text" class="form-control" name="num_pieceid" placeholder="Numéro de piece d'identité" id="num_pieceid" required>
+                        </div>
+
+                        <br/>
+{#                        <div>#}
+{#                            <button type="button" class="btn btn-outline-primary" onclick="imprimer('section_imprime')">Imprimer</button>#}
+{#                        </div>#}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+{% endblock %}
+
+
+{% block content %}
+    <div class="card border-secondary mb-3">
+        <div class="card-header" style="text-align: center">Détails sur la parcelle</div>
+        <div class="card-body">
+            <div>
+                <a href="{% url 'parcelle' %}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Précédent</a>
+            </div>
+            <div>
+                <ul class="list-group list-group-flush">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <li class="list-group-item"><b>Préfecture:</b> {{ parcelle.quartier.village.canton.commune.prefecture.region.libRegion }}</li>
+                            <li class="list-group-item"><b>Préfecture:</b> {{ parcelle.quartier.village.canton.commune.prefecture.liPrefecture }}</li>
+                            <li class="list-group-item"><b>Commune:</b> {{ parcelle.quartier.village.canton.commune.libCommune }}</li>
+                            <li class="list-group-item"><b>Canton:</b> {{ parcelle.quartier.village.canton.libCanton }}</li>
+                            <li class="list-group-item"><b>Village:</b> {{ parcelle.quartier.village.libVillage }}</li>
+                            <li class="list-group-item"><b>Quartier:</b> {{ parcelle.quartier.libQuartier }}</li>
+                            <li class="list-group-item"><b>Type de parcelle:</b> {{ parcelle.typeParcelle.libTypeParcelle }}</li>
+                        </div>
+                        <div class="col-md-6">
+                            <li class="list-group-item"><b>Propriétaire:</b>
+                                <a href="" data-toggle="modal" data-target="#myModal" onclick="afficherProprio()">{{ historique.proprietaire.nom }} {{ historique.proprietaire.prenom }}</a>
+                            </li>
+                            <li class="list-group-item"><b>Numéro de lot:</b> {{ parcelle.numLot }}</li>
+                            <li class="list-group-item"><b>Numéro de titre foncier:</b> {{ parcelle.numTitreFoncier }}</li>
+                            <li class="list-group-item"><b>Numéro d'identification fiscal:</b> {{ parcelle.numIdFiscal }}</li>
+                            <li class="list-group-item"><b>Numéro d'approbation:</b> {{ parcelle.numApprobation }}</li>
+                            <li class="list-group-item"><b>DIDE:</b> {{ parcelle.dide }}</li>
+                            <li class="list-group-item"><b>Nom du géomètre:</b> {{ parcelle.nomGeometre }}</li>
+                            <li class="list-group-item"><b>Fichier:</b> <a href="/media/{{ file.file }}">{{ file.file }}</a></li>
+                        </div>
+                    </div>
+
+                    <div>
+
+                    </div>
+
+
+                </ul>
+            </div>
+
+            <div id="map" style="height: 480px"></div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var map = L.map('map').setView([6.191188279065508, 1.204699017211965], 15);
+
+        var osm=new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'});
+
+        osm.addTo(map);
+
+        var dataurl = '{% url 'parcelleDetailsVue' parcelle.id %}';
+        $.getJSON(dataurl, function (data) {
+
+            var latlong = L.geoJson(data,{
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup('<small>'+feature.properties.numLot+'</small>');
+                }
+            }).addTo(map)
+            map.fitBounds(latlong.getBounds());
+
+
+
+        });
+
+
+
+    </script>
+
+    <script>
+        function afficherProprio() {
+            document.getElementById('nom').value = '{{ historique.proprietaire.nom }}'
+            document.getElementById('prenom').value = '{{ historique.proprietaire.prenom }}'
+            document.getElementById('sexem').value = '{{ historique.proprietaire.sexe }}'
+            document.getElementById('telephone').value = '{{ historique.proprietaire.telephone }}'
+            document.getElementById('adresse').value = '{{ historique.proprietaire.adresse }}'
+            document.getElementById('email').value = '{{ historique.proprietaire.email }}'
+            document.getElementById('fonction').value = '{{ historique.proprietaire.fonction }}'
+            document.getElementById('date_naiss').value = '{{ historique.proprietaire.date_naiss }}'
+            document.getElementById('num_pieceid').value = '{{ historique.proprietaire.num_pieceid }}'
+
+
+            var Naissance = '{{ historique.proprietaire.date_naiss|date:"Y" }}'+"-"+'{{ historique.proprietaire.date_naiss|date:"m" }}'+"-"+'{{ historique.proprietaire.date_naiss|date:"d" }}' ;
+            $('#date_naiss').val(Naissance);
+
+
+        }
+    </script>
+
+{#    <script>#}
+{#        function imprimer(divName) {#}
+{#            var printContents = document.getElementById(divName).innerHTML;#}
+{#            var originalContents = document.body.innerHTML;#}
+{#            document.body.innerHTML = printContents;#}
+{#            window.print();#}
+{#            document.body.innerHTML = originalContents;#}
+{#        }#}
+{#    </script>#}
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

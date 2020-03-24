@@ -1,0 +1,75 @@
+/*!*html {*!*/
+  /*!*position: relative;*!*/
+  /*!*min-height: 100%;*!*/
+/*!*}*!*/
+/*!*body {*!*/
+  /*!*!* Margin bottom by footer height *!*!*/
+  /*!*margin-bottom: 35px;*!*/
+/*!*}*!*/
+
+
+/*footer {*/
+  /*position: fixed;*/
+  /*bottom: 0;*/
+  /*width: 100%;*/
+  /*!* Set the fixed height of the footer here *!*/
+  /*height: 15px;*/
+  /*line-height: 10px; !* Vertically center the text there *!*/
+  /*background-color: #f5f5f5;*/
+/*}*/
+
+/*!*!*.footer {*!*!*/
+    /*!*!*position: fixed;*!*!*/
+    /*!*!*height: 50px;*!*!*/
+    /*!*!*margin-top: 1em;*!*!*/
+    /*!*!*bottom: 0;*!*!*/
+    /*!*!*right: 0;*!*!*/
+    /*!*!*left: 0;*!*!*/
+    /*!*!*background: green;*!*!*/
+/*!*!*}*!*!*/
+
+
+/*!*!*nav {*!*!*/
+    /*!*!*position: fixed;*!*!*/
+    /*!*!*height: 50px;*!*!*/
+    /*!*!*margin-bottom: 1em;*!*!*/
+    /*!*!*top: 0;*!*!*/
+    /*!*!*right: 0;*!*!*/
+    /*!*!*left: 0;*!*!*/
+    /*!*!*background: yellow;*!*!*/
+/*!*!*}*!*!*/
+
+/*footer {*/
+    /*position: fixed;*/
+    /*height: 50px;*/
+    /*margin-top: 1em;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+    /*left: 0;*/
+    /*background: green;*/
+/*}*/
+
+/*#main-container {*/
+    /*position: fixed;*/
+    /*top: calc(35px + 1em);*/
+    /*bottom: calc(60px + 1em);*/
+    /*right: 0;*/
+    /*left: 0;*/
+    /*vertical-align: top;*/
+    /*padding-top: 20px;*/
+/*}*/
+
+/*!*!*.wrapper {*!*!*/
+    /*!*!*height: 100%;*!*!*/
+    /*!*!*width: calc(100% - 300px - 0.25em);*!*!*/
+    /*!*!*float: left;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*.wrapper {*!*!*/
+    /*!*!*height: 100%;*!*!*/
+    /*!*!*width: calc(300px);*!*!*/
+    /*!*!*float: left;*!*!*/
+    /*!*!*background: red;*!*!*/
+/*!*!*}*!*!*/
+
+

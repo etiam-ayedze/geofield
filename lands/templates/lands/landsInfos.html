@@ -1,0 +1,364 @@
+{% extends 'dashboard1.html' %}
+{% block modal_title %}
+    Enregistrer un proriétaire
+{% endblock %}
+{% block modal_content %}
+    <form action="{% url 'proprio' %}" method="post" autocomplete="off" id="idproprio">
+        {% csrf_token %}
+        <div class="form-group" >
+
+            <div class="row">
+                <div class="col-sm-5 col-md-6">
+                    <div>
+                        <label class="col-form-label" for="inputDefault">Nom</label>
+                        <input type="text" class="form-control" name="nom" placeholder="Nom" id="nom" required>
+                    </div>
+
+                    <div>
+                        <label class="col-form-label" for="inputDefault">Prénoms</label>
+                        <input type="text" class="form-control" name="prenom" placeholder="Prénoms" id="prenom" required>
+                    </div>
+
+                    <br/>
+                    <div >
+                        <legend><H6>Sexe</H6></legend>
+                        <div class="form-check col-md-6">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="sexe" id="sexem" value="M" checked>
+                                Masculin
+                            </label>
+                        </div>
+
+                        <div class="form-check col-md-6">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="sexe" id="sexef" value="F" checked>
+                                Féminin
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="col-form-label" for="example-tel-input" >Telephone</label>
+                        <input type="text" class="form-control" name="telephone" placeholder="Telephone" id="telephone" required onkeyup="verif_nombre(this);">
+                    </div>
+
+                    <div>
+                        <label class="col-form-label" for="example-tel-input">Adresse</label>
+                        <input type="text" class="form-control" name="adresse" placeholder="Adresse" id="adresse" required>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+
+
+                    <div>
+                        <label class="col-form-label" for="exampleInputEmail1">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="email@example.com">
+                    </div>
+
+                    <div>
+                        <label class="col-form-label" for="inputDefault">Fonction</label>
+                        <input type="text" class="form-control" name="fonction" placeholder="Fonction" id="fonction" required>
+                    </div>
+
+                    <div>
+                        <label for="example-date-input" class="col-form-label">Date de naissance</label>
+                        <input class="form-control" type="date" value="JJ/MM/AAAA" name="date_naiss" id="date_naiss">
+                    </div>
+
+                    <div>
+                        <label class="col-form-label" for="inputDefault">Numéro ID</label>
+                        <input type="text" class="form-control" name="num_pieceid" placeholder="Numéro de piece d'identité" id="num_pieceid" required>
+                    </div>
+
+                    <br/>
+                    <div>
+                        <button type="submit" class="btn btn-primary" onclick=" check()">Valider</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+{% endblock %}
+
+
+{% block content %}
+    <div class="card border-secondary">
+        <div class="card-header" style="text-align: center">Infos Parcelle</div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-6" id="map"></div>
+
+                <div class="col-md-6">
+
+                    <form action="{% url 'landsinfos' %}" method="post" autocomplete="off" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="accordion" id="accordionExample">
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Informations d'identification
+                                        </button>
+                                    </h2>
+                                </div>
+
+                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                    <br class="card-body">
+                                    {#<form>#}
+                                    <div class="form-group">
+                                        <select class="custom-select col-md-10" required name="proprietaire" id="proprietaire">
+                                            <option selected="">Selectionner propriétaire</option>
+                                            {% for prop in proprio %}
+                                                <option value={{ prop.pk }}>{{ prop.nom}} {{ prop.prenom }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">Nouveau</button>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <select class="custom-select" required name="quartier" id="quartier">
+                                            <option selected="">Selectionner quartier</option>
+                                            {% for quart in quartier %}
+                                                <option value={{ quart.pk }}>{{ quart.libQuartier }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label class="col-form-label" for="inputDefault">Coordonnées géographiques</label>
+                                        <input type="text" class="form-control" placeholder="Coordonées géographiques" name="coordonee" onchange="drawPolygon()" id="coordonee" required>
+                                    </div></br>
+
+                                    <div class="form-group">
+                                        <select class="custom-select" required name="typeParcelle" id="typeParcelle">
+                                            <option selected="">Selectionner type de parcelle</option>
+                                            {% for tparc in tparcelle %}
+                                                <option value="{{ tparc.pk }}">{{ tparc.libTypeParcelle }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <select class="custom-select" required name="typeSuccession" id="typeSuccession">
+                                            <option selected="">Selectionner type de succession</option>
+                                            {% for succ in tsuccession %}
+                                                <option value="{{ succ.pk }}">{{ succ.libTypeSuccession }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label for="example-date-input" class="col-form-label">Date d'acquisition</label>
+                                        <input class="form-control" type="date" value="JJ/MM/AAAA" name="dateDebutPossession" id="dateDebutPossession" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-form-label" for="exampleInputFile">Choisir un fichier</label>
+                                        <input type="file" class="form-control-file" name="file" id="file" aria-describedby="fileHelp">
+                                        <small id="fileHelp" class="form-text text-muted">Selectionner un fichier lié à la parcelle.</small>
+                                    </div>
+
+                                    {#</form>#}
+                                    <br/>
+                                    {#                                    <a href="#">#}
+                                    {#                                        <div class="col-md-1 ml-auto">#}
+                                    {#                                            <button class=" btn btn-success" >#}
+                                    {#                                                <i class="fa fa-arrow-right" aria-hidden="true"></i>#}
+                                    {#                                            </button>#}
+                                    {#                                        </div>#}
+                                    {#                                    </a>#}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Autres informations
+                                    </button>
+                                </h2>
+                            </div>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    {#<form>#}
+
+
+                                    <div>
+                                        <label class="col-form-label" for="inputDefault">Numéro de lot</label>
+                                        <input type="text" class="form-control" placeholder="Numéro de lot" name="numLot" id="numLot" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="col-form-label" for="inputDefault">Numéro de titre foncier</label>
+                                        <input type="text" class="form-control" placeholder="Numéro de titre foncier" name="numTitreFoncier" id="numTitreFoncier" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="col-form-label" for="inputDefault">Numéro d'identification fiscal</label>
+                                        <input type="text" class="form-control" placeholder="Numéro d'identification fiscal" name="numIdFiscal" id="numIdFiscal" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="col-form-label" for="inputDefault">Nom du géomètre</label>
+                                        <input type="text" class="form-control" placeholder="Nom du géomètre" name="nomGeometre" id="nomGeometre" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="col-form-label" for="inputDefault">Numéro d'approbation</label>
+                                        <input type="text" class="form-control" placeholder="Numéro d'approbation" name="numApprobation" id="numApprobation" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="col-form-label" for="inputDefault">DIDE</label>
+                                        <input type="text" class="form-control" placeholder="DIDE" name="dide" id="dide" required>
+                                    </div>
+
+                                    {#</form>#}
+                                </div>
+                                <div >
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+                </form>
+                {#                        <div class="card">#}
+                {#                            <div class="card-header" id="headingThree">#}
+                {#                                <h2 class="mb-0">#}
+                {#                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">#}
+                {#                                        Collapsible Group Item #3#}
+                {#                                    </button>#}
+                {#                                </h2>#}
+                {#                            </div>#}
+                {#                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">#}
+                {#                                <div class="card-body">#}
+                {#                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.#}
+                {#                                </div>#}
+                {#                            </div>#}
+                {#                        </div>#}
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        var map = L.map('map').setView([6.191188279065508, 1.204699017211965], 14);
+
+        var osm=new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'});
+
+        osm.addTo(map);
+
+
+        function drawPolygon() {
+            //var coords =  [[48,-3],[50,5],[44,11],[48,-3]] ;
+            var coords = document.getElementById("coordonee").value;
+
+            var a = JSON.parse(coords);
+
+            var polygon = L.polygon(a, {color: 'blue'});
+            polygon.addTo(map);
+
+            map.fitBounds(polygon.getBounds());
+        }
+    </script>
+
+    <script type="text/javascript">
+        var form = document.querySelector('form')
+
+        function v(event)
+        {
+            event.preventDefault();
+        }
+
+        function formatDate(date) {
+            var year = date.getFullYear().toString();
+            var month = (date.getMonth() + 101).toString().substring(1);
+            var day = (date.getDate() + 100).toString().substring(1);
+            return year + "-" + month + "-" + day;
+        }
+
+
+        function check() {
+            a  = document.getElementById('date_naiss').value
+            b = formatDate(new Date())
+            if(a>b)
+            {
+                form.addEventListener('submit',v);
+
+                alert('Veuiller saisir une date postérieur à celle de la date du jour');
+            }else
+            {
+                form.submit()
+            }
+        }
+
+    </script>
+
+    <script>
+        function verif_nombre(champ)
+        {
+            var chiffres = new RegExp("[0-9]");
+            var verif;
+            var points = 0;
+
+            for(x = 0; x < champ.value.length; x++)
+            {
+                verif = chiffres.test(champ.value.charAt(x));
+                if(champ.value.charAt(x) == "."){points++;}
+                if(points > 1){verif = false; points = 1;}
+                if(verif == false){champ.value = champ.value.substr(0,x) + champ.value.substr(x+1,champ.value.length-x+1); x--;}
+            }
+        }
+    </script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

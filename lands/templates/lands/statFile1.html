@@ -1,0 +1,145 @@
+{% extends "dashboard1.html" %}
+{% load static %}
+{% block content %}
+    <div class="card border-secondary mb-3">
+    <div class="card-header" style="text-align: center">Statistiques</div>
+    <div class="card-body">
+        <form action="{% url 'parcelleParMois' %}" method="post">
+            {% csrf_token %}
+            {#            <div class="form-group col-md-2">#}
+            {#                <select class="custom-select" required name="annee" id="annee" onchange="chargeStat()">#}
+            {#                    <option selected="">année</option>#}
+            {#                    {% for an in annee %}#}
+            {#                        <option value="{{ an.dateDebutPossession.year }}" >{{ an.dateDebutPossession.year }}</option>#}
+            {#                    {% endfor %}#}
+            {#                </select>#}
+            {#                <button type="submit" class="btn btn-primary">Go</button>#}
+            {#            </div>#}
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <input type="text" maxlength="4" class="form-control" placeholder="Année" id="annee" name="annee" required autocomplete="off" onkeyup="verif_nombre(this);">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary">Exécuter</button>
+                </div>
+            </div>
+
+        </form>
+
+
+
+        <canvas id="myChart"></canvas>
+
+    </div>
+
+{% endblock %}
+
+{% block statscript %}
+    <script type="text/javascript" src="{% static 'stats/Chart.min.js' %}"></script>
+    <script type="text/javascript">
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+                datasets: [{
+                    label: '# Terrains acquis',
+                    data: [{{ parcHistorJan }}, {{ parcHistorFev }}, {{ parcHistorMar }}, {{ parcHistorAvr }}, {{ parcHistorMai }}, {{ parcHistorJuin }}, {{ parcHistorJuil }}, {{ parcHistorAout }}, {{ parcHistorSept }}, {{ parcHistorOct }}, {{ parcHistorNov }}, {{ parcHistorDec }}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function chargerStat(){
+
+            var annee = document.getElementById('an')
+
+        }
+    </script>
+
+    <script>
+        function verif_nombre(champ)
+        {
+            var chiffres = new RegExp("[0-9]");
+            var verif;
+            var points = 0;
+
+            for(x = 0; x < champ.value.length; x++)
+            {
+                verif = chiffres.test(champ.value.charAt(x));
+                if(champ.value.charAt(x) == "."){points++;}
+                if(points > 1){verif = false; points = 1;}
+                if(verif == false){champ.value = champ.value.substr(0,x) + champ.value.substr(x+1,champ.value.length-x+1); x--;}
+            }
+        }
+    </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

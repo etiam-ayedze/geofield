@@ -1,0 +1,136 @@
+{% extends 'dashboard1.html' %}
+
+{% block modal_title %}
+    Enregistrer un Type de succession
+{% endblock %}
+
+
+{% block modal_content %}
+    <form action="{% if update == True %}{% url 'modify_typesuccession' typesuccession.id %}{% else %} {% url 'type_succession' %}{% endif %}" method="post" autocomplete="off" id="idtypesucc">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">Type de succession</label>
+            <input type="text" class="form-control" name="libTypeSuccession" placeholder="Type de succession" id="libTypeSuccession" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Valider</button>
+    </form>
+{% endblock %}
+<!-- /Modal-->
+
+
+{% block content %}
+    <!--BreadCrumb-->
+    <div class="card border-secondary mb-3">
+        <div class="card-header" style="text-align: center">Type de succession</div>
+        <div class="card-body">
+            <!-- Bouton call modal for saving -->
+            <div class="row">
+                <div class="col-md-1 m1-auto">
+                    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal" onclick="rafraichirtypesucc()">Nouveau</button>
+                </div>
+            </div>
+            <!-- /Bouton call modal-->
+
+            <!--datatable-->
+            <div class="container-fluid">
+                <div style=" width: auto; height: 100vh; z-index: 99"><!--margin-top:70.5px;-->
+                    {% if message %}
+                        <ul class="message">
+                            {% for message in messages %}
+                                <li>
+                                    <div class="alert alert-success">{{ message }}</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Type de succession</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+                        {% for succ in succession %}
+                            <tr>
+                                <td>{{ succ.libTypeSuccession}}</td>
+                                <td>
+                                    {#                            <button type="button" class="btn btn-info">#}
+                                    {#                                <i class="fa fa-eye" aria-hidden="true"></i>#}
+                                    {#                            </button>#}
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" onclick="modifiertypesuccession({{ succ.id}})">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+
+                                    <a href="{% url 'delete_typesuccesion' succ.id %}" onclick="return delete_typesuccesion()">
+                                        <button type="button" class="btn btn-danger">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </button>
+                                    </a>
+
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- /datatable-->
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+
+
+        function modifiertypesuccession( id ) {
+            {% for succes in succession %}
+                var posit = '{{ succes.id }}'
+                if (posit == id){
+                    document.getElementById('libTypeSuccession').value = '{{ succes.libTypeSuccession }}'
+
+                    actionForm = document.getElementById('idtypesucc')
+
+                    actionForm.action += 'update/'+id
+
+                    console.log('{{ update }}')
+
+                    console.log()
+                }
+            {% endfor %}
+
+        }
+
+        function rafraichirtypesucc()
+        {
+            document.getElementById('libTypeSuccession').value='';
+
+            actionForm = document.getElementById('idtypesucc');
+
+            actionForm.action = '/lands/typesuccession/'
+        }
+
+    </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

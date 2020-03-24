@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GeoField</title>
+    <link rel="stylesheet" href="{% static 'datatable/css/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/leaflet.fullscreen.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min_sandstone.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/mon_css.css' %}">
+    {% block css %}{% endblock %}
+
+
+
+</head>
+<body>
+
+<!--modal-->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{% block modal_title %}{% endblock %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% block modal_content %}
+
+                    <!--contenu du modal-->
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--/modal-->
+
+<!--modal_2-->
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe2" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabe2">{% block modal2_title %}{% endblock %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% block modal2_content %}
+
+                    <!--contenu du modal-->
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--/modal_2-->
+
+<!-- /modal_form-->
+
+
+<!--Top menu  -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light p-1"> {# fixed-top #}
+    <a class="navbar-brand" href="{% url 'index' %}">Geo Field</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'parcelle' %}" style="color: #0c0c0c">PARCELLE</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'voir_proprio' %}" style="color: #0c0c0c">PROPRIETAIRE</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'visualize' %}" style="color: #0c0c0c">GEO VISUALISATION</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'stat1' %}" style="color: #0c0c0c">STATISTIQUES</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes" style="color: #0c0c0c">PARAMETRES<span class="caret"></span></a>
+                <div class="dropdown-menu" aria-labelledby="themes">
+                    <a class="dropdown-item" href="{% url 'save_region' %}">Subdivisions administratives</a>
+                    <a class="dropdown-item" href="{% url 'type_parcelle' %}">Type de parcelles</a>
+                    <a class="dropdown-item" href="{% url 'type_succession' %}">Type de succession</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'logout' %}">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                        Déconnexion
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<!--content-->
+<div class="main-container" style="margin-top: 45px">
+    {% block content %}
+
+        <!--contenu du body-->
+
+    {% endblock %}
+</div>
+<!-- /content-->
+
+
+<!--footer-->
+<footer class="navbar footer fixe-bottom">
+    <div class="footer-copyright-area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-copy-right">
+                        <p>Copyright © 2019 ISPACE CORPORATION All rights reserved. <a href="https://www.ispacecorp.com/">ISPACE CORPORATION</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% block statscript %}{% endblock %}
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/popper.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'datatable/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'datatable/js/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'js/mon_js.js' %}"></script>
+<script src="{% static 'leaflet/leaflet.js' %}"></script>
+<script> src="{% static 'plugins/Leaflet.fullscreen.js' %}"</script>
+<script> src="{% static 'stats/Chart.min.js' %}"</script>
+<script> src="{% static 'js/catiline.js' %}"</script>
+<script> src="{% static 'js/leaflet.shpfile.js' %}"</script>
+<script> src="{% static 'js/raphael.min.js' %}"</script>
+
+
+
+
+<!--datatable JS-->
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+<!-- /datatable JS-->
+
+
+{% block script %}{% endblock %}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
